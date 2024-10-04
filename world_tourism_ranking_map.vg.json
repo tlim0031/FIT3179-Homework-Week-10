@@ -1,7 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "World Tourism Ranking",
-  "width": 800,
+  "width": "container",
   "height": 400,
   "projection": {"type": "equalEarth"},
   "layer": [

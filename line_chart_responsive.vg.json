@@ -1,0 +1,93 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "./data/monthly_arrivals_by_state_nationality_and_gender.csv"
+  },
+  "width": "container",
+  "height": 450,
+  "params": [
+    {
+      "name": "Year_Selected",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": ["All", "2020", "2021", "2022", "2023", "2024"],
+        "name": "Select Year: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum.arrivals",
+      "as": "total_arrivals"
+    },
+    {
+      "filter": "Year_Selected == 'All' || year(datum.date) == Year_Selected"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "interpolate": "monotone",
+        "point": true
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "timeUnit": "month",
+          "title": "Month"
+        },
+        "y": {
+          "field": "total_arrivals",
+          "aggregate": "sum",
+          "title": "Total Arrivals"
+        },
+        "color": {
+          "timeUnit": "year",
+          "type": "nominal",
+          "field": "date",
+          "title": "Year",
+          "legend":{"orient": "right", "legendX":50, "legendY":50}
+        },
+        "tooltip": [
+          {"field": "date", "timeUnit": "year", "type": "nominal", "title": "Year"},
+          {"field": "date", "timeUnit": "month", "type": "ordinal", "title": "Month"},
+          {"field": "total_arrivals", "aggregate": "sum","type": "quantitative", "title": "Total Arrivals"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text", 
+        "align": "right", 
+        "baseline": "middle", 
+        "dx": -12, 
+        "fontSize": 11.5, 
+        "fontStyle": "italic",
+        "color": "red"
+      },
+      "encoding": {
+        "x": {
+          "timeUnit": "month",
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "arrivals",
+          "type": "quantitative"
+        },
+        "text": {
+          "value": ["Significant drop in tourist arrivals", "due to COVID-19 pandemic."] 
+        }
+      },
+      "transform": [
+        {
+          "filter": "year(datum.date) == 2020 && month(datum.date) == 2" 
+        }
+      ]
+    }
+  ]
+  
+}
